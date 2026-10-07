@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Asalxon — Creative Developer</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#0b0716;
+  --text:#f7f4ff;
+  --muted:#9d98ad;
+  --purple:#6d7fff;
+  --pink:#b8a6ff;
+  --cyan:#7fc4ff;
+  --blue:#4a63e0;
+  --amber:#9fb3ff;
+  --card:rgba(255,255,255,.055);
+  --border:rgba(255,255,255,.12);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Space Grotesk",sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+  position:relative;
+}
+
+/* rich ambient color wash across the WHOLE page, not just the hero */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(109,127,255,.20), transparent 32%),
+    radial-gradient(circle at 88% 18%, rgba(184,166,255,.16), transparent 30%),
+    radial-gradient(circle at 20% 55%, rgba(127,196,255,.13), transparent 28%),
+    radial-gradient(circle at 82% 68%, rgba(159,179,255,.10), transparent 30%),
+    radial-gradient(circle at 45% 92%, rgba(74,99,224,.16), transparent 32%),
+    var(--bg);
+}
+
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:999;
+  opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* BACKGROUND */
+
+#particles{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:-2;
+}
+
+.blob{
+  position:fixed;
+  width:420px;
+  height:420px;
+  border-radius:50%;
+  filter:blur(100px);
+  opacity:.28;
+  pointer-events:none;
+  z-index:-1;
+}
+
+.blob.one{
+  background:var(--purple);
+  left:-150px;
+  top:15%;
+  animation:float1 12s infinite alternate ease-in-out;
+}
+
+.blob.two{
+  background:var(--pink);
+  right:-160px;
+  top:55%;
+  animation:float2 15s infinite alternate ease-in-out;
+}
+
+.blob.three{
+  background:var(--cyan);
+  left:20%;
+  top:120%;
+  animation:float3 18s infinite alternate ease-in-out;
+}
+
+.blob.four{
+  background:var(--amber);
+  right:5%;
+  top:170%;
+  opacity:.16;
+  animation:float1 20s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes float1{
+  to{transform:translate(180px,120px)}
+}
+@keyframes float2{
+  to{transform:translate(-160px,-100px)}
+}
+@keyframes float3{
+  to{transform:translate(140px,-160px)}
+}
+
+/* CURSOR */
+.cursor{
+  position:fixed;
+  width:22px;
+  height:22px;
+  border:1px solid white;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  z-index:9999;
+  transition:width .12s ease,height .12s ease,background .12s ease,border .12s ease;
+  mix-blend-mode:difference;
+  background:transparent;
+}
+
+.cursor-dot{
+  position:fixed;
+  width:5px;
+  height:5px;
+  background:white;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  z-index:10000;
+  mix-blend-mode:difference;
+}
+
+.cursor.active{
+  width:65px;
+  height:65px;
+  background:white;
+  mix-blend-mode:difference;
+}
+
+/* LOADER */
+
+.loader{
+  position:fixed;
+  inset:0;
+  z-index:100000;
+  background:#0b0716;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:1s;
+}
+
+.loader.hide{
+  opacity:0;
+  pointer-events:none;
+}
+
+.loader-inner{
+  width:min(520px,80%);
+}
+
+.loader-title{
+  display:flex;
+  justify-content:space-between;
+  font:12px "DM Mono";
+  color:#aaa;
+  margin-bottom:15px;
+}
+
+.loader-track{
+  height:3px;
+  background:#24202e;
+  overflow:hidden;
+}
+
+.loader-bar{
+  width:0;
+  height:100%;
+  background:linear-gradient(90deg,var(--purple),var(--pink),var(--cyan));
+  animation:loading 2.4s forwards;
+}
+
+@keyframes loading{
+  to{width:100%}
+}
+
+/* NAV */
+
+nav{
+  position:fixed;
+  top:0;
+  width:100%;
+  padding:24px 5vw;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:100;
+  backdrop-filter:blur(10px);
+}
+
+.logo{
+  font-weight:700;
+  letter-spacing:-1px;
+}
+
+.logo span{
+  color:var(--pink);
+}
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  font:11px "DM Mono";
+  color:#aaa;
+}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.status i{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#56f39a;
+  box-shadow:0 0 12px #56f39a;
+}
+
+.lang-toggle{
+  display:flex;
+  border:1px solid var(--border);
+  border-radius:100px;
+  overflow:hidden;
+  background:rgba(255,255,255,.05);
+}
+
+.lang-btn{
+  padding:7px 13px;
+  font:11px "DM Mono";
+  color:#999;
+  background:transparent;
+  border:0;
+  cursor:none;
+  transition:.3s;
+}
+
+.lang-btn.active{
+  background:linear-gradient(100deg,var(--purple),var(--pink));
+  color:white;
+}
+
+/* HERO */
+
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  padding:100px 6vw;
+  overflow:hidden;
+}
+
+.hero-grid{
+  position:absolute;
+  inset:-20%;
+  background-image:
+    linear-gradient(rgba(109,127,255,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(109,127,255,.08) 1px,transparent 1px);
+  background-size:70px 70px;
+  transform:perspective(500px) rotateX(55deg) translateY(30%);
+  mask-image:linear-gradient(transparent,#000 35%,#000 65%,transparent);
+}
+
+.hero-content{
+  text-align:center;
+  position:relative;
+  z-index:2;
+}
+
+.kicker{
+  display:inline-flex;
+  padding:9px 16px;
+  border:1px solid var(--border);
+  border-radius:100px;
+  background:rgba(255,255,255,.04);
+  font:11px "DM Mono";
+  color:#c9c2d8;
+  margin-bottom:28px;
+  animation:fadeUp 1s 2.3s both;
+}
+
+.hero h1{
+  font-size:clamp(70px,15vw,210px);
+  line-height:.78;
+  letter-spacing:-.09em;
+  font-weight:700;
+  background:linear-gradient(
+    100deg,
+    #fff 15%,
+    #b3c2ff 38%,
+    #c9b3ff 60%,
+    #6fd8ff 85%
+  );
+  background-size:250% auto;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:
+    gradient 6s linear infinite,
+    fadeUp 1s 2.4s both;
+}
+
+@keyframes gradient{
+  to{background-position:250% center}
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(25px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.hero-description{
+  max-width:650px;
+  margin:35px auto 0;
+  color:var(--muted);
+  font-size:clamp(16px,2vw,20px);
+  line-height:1.6;
+  animation:fadeUp 1s 2.6s both;
+}
+
+.hero-description strong{
+  color:white;
+}
+
+.hero-buttons{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-top:38px;
+  animation:fadeUp 1s 2.8s both;
+}
+
+.btn{
+  padding:15px 24px;
+  border-radius:100px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.06);
+  color:white;
+  font:12px "DM Mono";
+  transition:.35s;
+}
+
+.btn.primary{
+  border:0;
+  background:linear-gradient(100deg,var(--purple),var(--pink));
+  box-shadow:0 0 35px rgba(109,127,255,.3);
+}
+
+.btn:hover{
+  transform:translateY(-5px) scale(1.03);
+}
+
+.scroll-hint{
+  position:absolute;
+  bottom:28px;
+  font:10px "DM Mono";
+  color:#777;
+  letter-spacing:3px;
+  animation:bounce 2s infinite;
+}
+
+@keyframes bounce{
+  50%{transform:translateY(8px)}
+}
+
+/* COMMON */
+
+section{
+  min-height:100vh;
+  padding:150px 8vw;
+  position:relative;
+}
+
+.section-label{
+  color:#8a84a0;
+  font:11px "DM Mono";
+  letter-spacing:2px;
+  margin-bottom:25px;
+}
+
+.gradient-title{
+  font-size:clamp(55px,9vw,130px);
+  line-height:.87;
+  letter-spacing:-.075em;
+  max-width:1000px;
+}
+
+.muted{color:var(--muted)}
+
+/* INTRO */
+
+.intro{
+  display:flex;
+  align-items:center;
+}
+
+.intro-wrap{
+  max-width:1100px;
+}
+
+.intro-line{
+  margin-top:50px;
+  max-width:700px;
+  font-size:clamp(20px,3vw,35px);
+  line-height:1.3;
+  color:#d0cadb;
+}
+
+.intro-line span{
+  color:#8a84a0;
+}
+
+.age-badge{
+  display:inline-block;
+  margin-top:45px;
+  padding:12px 18px;
+  border-radius:12px;
+  background:linear-gradient(100deg,rgba(109,127,255,.22),rgba(184,166,255,.18));
+  border:1px solid rgba(255,255,255,.14);
+  font:12px "DM Mono";
+}
+
+/* yosh */
+
+.age-section{
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background:
+    radial-gradient(circle at 70% 40%,rgba(184,166,255,.18),transparent 32%),
+    radial-gradient(circle at 20% 70%,rgba(127,196,255,.14),transparent 28%);
+}
+
+.age-number{
+  font-size:clamp(180px,38vw,600px);
+  line-height:.65;
+  letter-spacing:-.13em;
+  font-weight:700;
+  background:linear-gradient(120deg,#fff,#9db4ff,#c9b3ff,#6fd8ff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  transform:translateX(-30px);
+}
+
+.age-reveal-text{
+  margin-top:100px;
+  max-width:700px;
+  font-size:clamp(25px,4vw,55px);
+  line-height:1;
+  letter-spacing:-.05em;
+}
+
+.age-reveal-text span{
+  color:#8a84a0;
+}
+
+/* mahoratlar */
+
+.skills{
+  background:
+    radial-gradient(circle at 85% 15%, rgba(109,127,255,.10), transparent 35%),
+    #0e0a1a;
+}
+
+.skill-layout{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:100px;
+  align-items:center;
+}
+
+.skill-description{
+  max-width:500px;
+  color:#a89fbf;
+  line-height:1.7;
+  margin-top:30px;
+}
+
+.skill-orb{
+  height:500px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.orb{
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 35% 30%,#fff,transparent 7%),
+    radial-gradient(circle at 50% 50%,#8fa3ff,#4a5bc9 40%,#170b31 70%);
+  box-shadow:
+    0 0 50px #6d7fff66,
+    0 0 150px #b8a6ff22;
+  animation:orbFloat 4s ease-in-out infinite;
+}
+
+@keyframes orbFloat{
+  50%{transform:translateY(-20px) rotate(10deg)}
+}
+
+.orbit{
+  position:absolute;
+  width:350px;
+  height:350px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:50%;
+  animation:orbit 10s linear infinite;
+}
+
+.orbit:nth-child(2){
+  width:450px;
+  height:180px;
+  transform:rotate(35deg);
+  animation-duration:13s;
+}
+
+.orbit:nth-child(3){
+  width:180px;
+  height:450px;
+  transform:rotate(-35deg);
+  animation-duration:15s;
+}
+
+@keyframes orbit{
+  to{transform:rotate(395deg)}
+}
+
+.skill-tags{
+  position:absolute;
+  inset:0;
+}
+
+.skill-tag{
+  position:absolute;
+  padding:10px 15px;
+  background:rgba(20,14,32,.75);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:10px;
+  font:11px "DM Mono";
+  transition:.4s;
+}
+
+.skill-tag:hover{
+  transform:scale(1.2);
+  border-color:var(--pink);
+  box-shadow:0 0 30px #b8a6ff44;
+}
+
+.t1{top:8%;left:8%}
+.t2{top:20%;right:4%}
+.t3{bottom:20%;left:2%}
+.t4{bottom:10%;right:13%}
+.t5{top:47%;left:0}
+.t6{top:55%;right:0}
+
+/* loyihalar */
+
+.projects{
+  overflow:hidden;
+}
+
+.project-card{
+  margin-top:90px;
+  min-height:560px;
+  border:1px solid var(--border);
+  border-radius:30px;
+  padding:45px;
+  background:
+    radial-gradient(circle at 75% 30%,rgba(109,127,255,.26),transparent 32%),
+    rgba(255,255,255,.035);
+  position:relative;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  gap:60px;
+  transition:.5s;
+}
+
+.project-card:hover{
+  transform:translateY(-10px);
+  border-color:rgba(255,255,255,.3);
+  box-shadow:0 30px 100px rgba(0,0,0,.35);
+}
+
+.project-number{
+  font:11px "DM Mono";
+  color:#8a84a0;
+  margin-bottom:20px;
+}
+
+.project-card h3{
+  font-size:clamp(45px,6vw,90px);
+  line-height:.85;
+  letter-spacing:-.07em;
+}
+
+.project-card p{
+  margin-top:28px;
+  max-width:450px;
+  color:#a89fbf;
+  line-height:1.7;
+}
+
+.project-link{
+  display:inline-block;
+  margin-top:35px;
+  font:12px "DM Mono";
+  border-bottom:1px solid #999;
+  padding-bottom:7px;
+}
+
+.project-screen{
+  height:400px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.14);
+  position:relative;
+  overflow:hidden;
+  background:#0d0918;
+}
+
+.screen-top{
+  height:42px;
+  border-bottom:1px solid #2a2438;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:0 15px;
+}
+
+.screen-top i{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#3a3450;
+}
+
+.screen-content{
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+.screen-content canvas{
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.screen-live{
+  position:absolute;
+  top:14px;
+  right:16px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font:9px "DM Mono";
+  letter-spacing:1px;
+  color:#ff8a8a;
+  z-index:2;
+}
+
+.screen-live i{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#ff5c5c;
+  box-shadow:0 0 8px #ff5c5c;
+  animation:liveBlink 1.4s ease-in-out infinite;
+}
+
+@keyframes liveBlink{
+  50%{opacity:.25}
+}
+
+.screen-caption{
+  position:absolute;
+  bottom:14px;
+  left:16px;
+  right:16px;
+  font:10px "DM Mono";
+  color:#8a84a0;
+  letter-spacing:.5px;
+  z-index:2;
+}
+
+.screen-caption span{
+  color:#c9c2ff;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* GALLERY / SLAYDLAR */
+
+.gallery{
+  padding-top:0;
+  min-height:auto;
+  padding-bottom:150px;
+}
+
+.slider{
+  margin-top:80px;
+  display:flex;
+  gap:26px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  padding-bottom:20px;
+  -webkit-overflow-scrolling:touch;
+}
+
+.slider::-webkit-scrollbar{
+  height:6px;
+}
+
+.slider::-webkit-scrollbar-thumb{
+  background:linear-gradient(90deg,var(--purple),var(--pink));
+  border-radius:10px;
+}
+
+.slide{
+  flex:0 0 min(360px,80vw);
+  scroll-snap-align:start;
+  border-radius:24px;
+  border:1px solid var(--border);
+  overflow:hidden;
+  background:rgba(255,255,255,.03);
+  transition:.4s;
+}
+
+.slide:hover{
+  transform:translateY(-8px);
+  border-color:rgba(255,255,255,.3);
+}
+
+.slide-visual{
+  height:220px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.slide-visual .shape{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(2px);
+}
+
+.slide1 .slide-visual{background:linear-gradient(135deg,#1a2050,#1f2a55)}
+.slide1 .shape{width:150px;height:150px;background:radial-gradient(circle,#a6b8ff,#5a6fe0);top:20px;left:30px;animation:orbFloat 5s ease-in-out infinite}
+.slide1 .shape.two{width:80px;height:80px;background:radial-gradient(circle,#c9b8ff,#b8a6ff);bottom:10px;right:40px;filter:blur(1px);animation:orbFloat 6s ease-in-out infinite reverse}
+
+.slide2 .slide-visual{background:linear-gradient(135deg,#0f2e3d,#0a3a4a)}
+.slide2 .shape{width:170px;height:60px;border-radius:30px;background:linear-gradient(90deg,#7fc4ff,#4a63e0);top:40%;left:15%;animation:orbFloat 4.5s ease-in-out infinite}
+.slide2 .shape.two{width:90px;height:90px;background:radial-gradient(circle,#89f0ff,#22c3e6);bottom:15px;right:25px;animation:orbFloat 7s ease-in-out infinite reverse}
+
+.slide3 .slide-visual{background:linear-gradient(135deg,#1f2a4d,#2a3560)}
+.slide3 .shape{width:130px;height:130px;border-radius:35%;background:linear-gradient(135deg,#9fb3ff,#7f97ff);top:30px;right:30px;animation:screenCore 5s infinite ease-in-out}
+.slide3 .shape.two{width:60px;height:60px;background:radial-gradient(circle,#c9d4ff,#9fb3ff);bottom:20px;left:35px;animation:orbFloat 6.5s ease-in-out infinite}
+
+.slide4 .slide-visual{background:linear-gradient(135deg,#1a2f4d,#241a4d)}
+.slide4 .shape{width:200px;height:2px;background:linear-gradient(90deg,transparent,#6d7fff,transparent);top:30%;left:0;box-shadow:0 0 20px #6d7fff}
+.slide4 .shape.two{width:140px;height:140px;border-radius:50%;border:2px solid #7fc4ff88;top:20%;right:-20px}
+
+.slide-body{
+  padding:22px 22px 26px;
+}
+
+.slide-tag{
+  font:10px "DM Mono";
+  color:#8a84a0;
+  letter-spacing:1.5px;
+  margin-bottom:8px;
+}
+
+.slide-body h4{
+  font-size:20px;
+  letter-spacing:-.02em;
+}
+
+.slide-body p{
+  margin-top:8px;
+  color:#a89fbf;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.slider-hint{
+  margin-top:18px;
+  font:11px "DM Mono";
+  color:#777;
+  letter-spacing:1px;
+}
+
+/* jarayon */
+
+.process{
+  background:#f4f0ff;
+  color:#110b1c;
+}
+
+.process .section-label{
+  color:#7a7488;
+}
+
+.process-list{
+  margin-top:80px;
+  max-width:1000px;
+}
+
+.process-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-top:1px solid #d4cddd;
+  padding:30px 0;
+  transition:.4s;
+}
+
+.process-item:last-child{
+  border-bottom:1px solid #d4cddd;
+}
+
+.process-item:hover{
+  padding-left:30px;
+  padding-right:30px;
+  background:linear-gradient(90deg,#ffffff00,#ffffffaa,#ffffff00);
+}
+
+.process-main{
+  font-size:clamp(25px,4vw,55px);
+  letter-spacing:-.05em;
+}
+
+.process-num{
+  font:11px "DM Mono";
+  color:#7a7488;
+}
+
+/* kelajak */
+
+.future{
+  min-height:120vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 50%,#3d1e70 0%,transparent 42%),
+    radial-gradient(circle at 20% 80%,rgba(127,196,255,.10),transparent 30%),
+    #0b0716;
+}
+
+.future-small{
+  font:11px "DM Mono";
+  color:#8a84a0;
+  letter-spacing:3px;
+}
+
+.future-year{
+  margin-top:30px;
+  font-size:clamp(110px,25vw,400px);
+  line-height:.75;
+  font-weight:700;
+  letter-spacing:-.12em;
+  background:linear-gradient(90deg,#fff,#7f97ff,#c3b3ff,#6fd8ff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  transition:.5s;
+}
+
+.future-text{
+  margin:60px auto 0;
+  max-width:600px;
+  color:#a89fbf;
+  font-size:20px;
+  line-height:1.5;
+}
+
+/* END */
+
+.final{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.final h2{
+  font-size:clamp(70px,14vw,200px);
+  line-height:.78;
+  letter-spacing:-.1em;
+  background:linear-gradient(100deg,#fff,#8fa8ff,#c3b3ff,#55d0ea);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.final p{
+  color:#8a84a0;
+  margin-top:40px;
+}
+
+.magic{
+  margin-top:35px;
+  padding:17px 28px;
+  border:1px solid #ffffff22;
+  background:#ffffff08;
+  color:white;
+  border-radius:100px;
+  font:11px "DM Mono";
+  transition:.4s;
+}
+
+.magic:hover{
+  background:white;
+  color:#080510;
+  transform:scale(1.08);
+}
+
+/* SECRET ORBS */
+
+.secret-dot{
+  position:absolute;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff,#b8a6ff 55%,#6d7fff 100%);
+  box-shadow:0 0 14px #b8a6ff88,0 0 30px #6d7fff55;
+  z-index:40;
+  animation:secretPulse 2.6s ease-in-out infinite;
+}
+
+.secret-dot:before{
+  content:"?";
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font:9px "DM Mono";
+  color:#0b0716;
+  font-weight:700;
+}
+
+.secret-dot:hover{
+  animation-play-state:paused;
+  transform:scale(1.35);
+}
+
+@keyframes secretPulse{
+  0%,100%{transform:scale(1);box-shadow:0 0 14px #b8a6ff88,0 0 30px #6d7fff55}
+  50%{transform:scale(1.15);box-shadow:0 0 22px #b8a6ffcc,0 0 45px #6d7fff88}
+}
+
+.secret-popup{
+  position:fixed;
+  z-index:10001;
+  width:min(300px,80vw);
+  padding:22px 22px 24px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.18);
+  background:linear-gradient(160deg,rgba(30,18,50,.96),rgba(15,9,28,.98));
+  backdrop-filter:blur(16px);
+  box-shadow:0 25px 80px rgba(0,0,0,.5),0 0 0 1px rgba(184,166,255,.08);
+  opacity:0;
+  transform:translateY(12px) scale(.94);
+  pointer-events:none;
+  transition:.28s cubic-bezier(.16,1,.3,1);
+}
+
+.secret-popup.show{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+
+.secret-popup .stag{
+  font:10px "DM Mono";
+  letter-spacing:1.5px;
+  color:var(--pink);
+  margin-bottom:10px;
+}
+
+.secret-popup p{
+  font-size:14px;
+  line-height:1.65;
+  color:#e8e2f5;
+}
+
+.secret-popup .sclose{
+  position:absolute;
+  top:10px;
+  right:12px;
+  background:none;
+  border:0;
+  color:#888;
+  font-size:16px;
+  cursor:none;
+}
+
+.secret-overlay{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  opacity:0;
+  pointer-events:none;
+  transition:.28s;
+}
+
+.secret-overlay.show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+@media(max-width:850px){
+  .secret-dot{width:13px;height:13px}
+}
+
+/* REVEAL */
+
+.reveal{
+  opacity:0;
+  transform:translateY(70px);
+  transition:
+    opacity 1s cubic-bezier(.16,1,.3,1),
+    transform 1s cubic-bezier(.16,1,.3,1);
+}
+
+.reveal.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:850px){
+
+  body{cursor:auto}
+
+  .cursor,.cursor-dot{display:none}
+
+  nav{padding:18px 20px}
+
+  .nav-right .status{display:none}
+
+  section{padding:110px 25px}
+
+  .skill-layout,
+  .project-card{
+    grid-template-columns:1fr;
+  }
+
+  .skill-orb{
+    height:420px;
+  }
+
+  .project-card{
+    padding:25px;
+  }
+
+  .project-screen{
+    height:300px;
+  }
+
+  .hero h1{
+    font-size:20vw;
+  }
+
+  .hero-buttons{
+    flex-direction:column;
+    align-items:center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="loader">
+  <div class="loader-inner">
+    <div class="loader-title">
+      <span>ASALXON.OS</span>
+      <span id="loadText">BOOTING...</span>
+    </div>
+    <div class="loader-track">
+      <div class="loader-bar"></div>
+    </div>
+  </div>
+</div>
+
+<canvas id="particles"></canvas>
+
+<div class="blob one"></div>
+<div class="blob two"></div>
+<div class="blob three"></div>
+<div class="blob four"></div>
+
+<div class="cursor"></div>
+<div class="cursor-dot"></div>
+
+<div class="secret-overlay" id="secretOverlay"></div>
+<div class="secret-popup" id="secretPopup">
+  <button class="sclose" id="secretClose">✕</button>
+  <div class="stag" id="secretTag">SIR</div>
+  <p id="secretText"></p>
+</div>
+
+<nav>
+  <div class="logo">ASAL<span>.</span></div>
+
+  <div class="nav-right">
+    <div class="status">
+      <i></i>
+      ONLINE
+    </div>
+    <span data-i18n="nav-role">13 / DASTURCHI</span>
+    <div class="lang-toggle">
+      <button class="lang-btn" data-lang="uz">UZ</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+</nav>
+
+
+<!-- boshi -->
+
+<section class="hero">
+
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+
+    <div class="kicker" data-i18n="kicker">✦ MENING RAQAMLI DUNYOMGA XUSH KELIBSIZ</div>
+
+    <h1 id="heroTitle">ASALXON</h1>
+
+    <p class="hero-description" data-i18n="hero-desc">
+      <strong>13 yoshda.</strong>
+      Kodlashni o'rganaman, g'oyalar yarataman
+      va xayolimni raqamli tajribaga aylantiraman.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#about" class="btn primary magnetic" data-i18n="btn-explore">MENI KASHF ET ↘</a>
+      <a href="#projects" class="btn magnetic" data-i18n="btn-work">ISHLARIMNI KO'R</a>
+    </div>
+
+  </div>
+
+  <div class="scroll-hint" data-i18n="scroll-hint">SKROLL QIL</div>
+
+</section>
+
+
+<!-- men haqmda -->
+
+<section class="intro" id="about">
+
+  <div class="secret-dot" data-secret="s-about" style="top:18%;right:7%"></div>
+
+  <div class="intro-wrap">
+
+    <div class="section-label" data-i18n="label-01">01 / SHU YERDAN BOSHLANG</div>
+
+    <div class="gradient-title reveal" data-i18n="about-title">
+      XO'SH...
+      <br>
+      ASALXON
+      <br>
+      KIM?
+    </div>
+
+    <div class="intro-line reveal" data-i18n="about-text">
+      Texnologiyani shunchaki
+      <span>ishlatib qo'ymaydigan,</span>
+      <br><br>
+      uni <strong>yaratmoqchi</strong> bo'lgan qiziqchan qiz.
+    </div>
+
+    <div class="age-badge reveal" data-i18n="age-badge">HOZIRGI YOSHIM → 13 YOSH</div>
+
+  </div>
+
+</section>
+
+
+<!-- yoshm -->
+
+<section class="age-section">
+
+  <div class="secret-dot" data-secret="s-age" style="bottom:12%;right:9%"></div>
+
+  <div class="section-label" data-i18n="label-02">02 / ODAMLAR KUTMAYDIGAN QISM</div>
+
+  <div class="age-number reveal">
+    13
+  </div>
+
+  <div class="age-reveal-text reveal" data-i18n="age-text">
+    <span>"Nima..."</span>
+    <br>
+    Men bor-yo'g'i 13 yoshdaman.
+    <br>
+    <span>Gap aynan shunda.</span>
+  </div>
+
+</section>
+
+
+<!-- mahoratlarm -->
+
+<section class="skills">
+
+  <div class="secret-dot" data-secret="s-skills" style="top:8%;left:3%"></div>
+
+  <div class="skill-layout">
+
+    <div>
+
+      <div class="section-label" data-i18n="label-03">03 / MENING RAQAMLI ASBOBLARIM</div>
+
+      <div class="gradient-title reveal" data-i18n="skills-title">
+        KOD —
+        <br>
+        MENING
+        <br>
+        MATERIALIM.
+      </div>
+
+      <p class="skill-description reveal" data-i18n="skills-text">
+        Men dasturlash, interfeyslar,
+        sun'iy intellekt va ijodiy texnologiyalar bilan
+        tajriba qilaman. Har bir yangi til g'oyani
+        qurishning yana bir yo'lini beradi.
+      </p>
+
+    </div>
+
+    <div class="skill-orb reveal">
+
+      <div class="orbit"></div>
+      <div class="orbit"></div>
+      <div class="orbit"></div>
+
+      <div class="orb"></div>
+
+      <div class="skill-tags">
+
+        <div class="skill-tag t1">HTML</div>
+        <div class="skill-tag t2">CSS</div>
+        <div class="skill-tag t3">JAVASCRIPT</div>
+        <div class="skill-tag t4">PYTHON</div>
+        <div class="skill-tag t5">REACT</div>
+        <div class="skill-tag t6">AI</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- LOYIHA LARM -->
+
+<section class="projects" id="projects">
+
+  <div class="secret-dot" data-secret="s-projects" style="top:4%;right:5%"></div>
+
+  <div class="section-label" data-i18n="label-04">04 / MEN NIMA YARATAMAN</div>
+
+  <div class="gradient-title reveal" data-i18n="projects-title">
+    G'OYALAR
+    <br>
+    HAQIQATGA
+    <br>
+    AYLANADI.
+  </div>
+
+
+  <div class="project-card reveal">
+
+    <div>
+
+      <div class="project-number" data-i18n="p1-number">
+        LOYIHA 01 / IJODIY AI
+      </div>
+
+      <h3 data-i18n="p1-title">
+        AI
+        <br>
+        MULTFILM
+        <br>
+        STUDIYASI
+      </h3>
+
+      <p data-i18n="p1-text">
+        Hikoyalarni AI yordamida qahramonlarga,
+        rasmlarga, animatsiyaga va ovozga
+        aylantirish g'oyasi.
+      </p>
+
+      <a class="project-link magnetic" data-i18n="p1-link">
+        G'OYANI KO'R ↗
+      </a>
+
+    </div>
+
+    <div class="project-screen">
+
+      <div class="screen-top">
+        <i></i><i></i><i></i>
+      </div>
+
+      <div class="screen-content">
+
+        <div class="screen-live"><i></i>LIVE</div>
+        <canvas id="screen1"></canvas>
+        <div class="screen-caption" data-i18n="screen1-caption">Loyiha <span>oldindan ko'rish</span> jarayoni...</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="project-card reveal">
+
+    <div>
+
+      <div class="project-number" data-i18n="p2-number">
+        LOYIHA 02 / EKSPERIMENT
+      </div>
+
+      <h3 data-i18n="p2-title">
+        RAQAMLI
+        <br>
+        LABORATORIYA
+      </h3>
+
+      <p data-i18n="p2-text">
+        Saytlar, animatsiyalar, AI va yangi
+        texnologiyalar bilan tajriba qilish
+        uchun shaxsiy maydonim.
+      </p>
+
+      <a class="project-link magnetic" data-i18n="p2-link">
+        TAJRIBALARNI KO'R ↗
+      </a>
+
+    </div>
+
+    <div class="project-screen">
+
+      <div class="screen-top">
+        <i></i><i></i><i></i>
+      </div>
+
+      <div class="screen-content">
+
+        <div class="screen-live"><i></i>LIVE</div>
+        <canvas id="screen2"></canvas>
+        <div class="screen-caption" data-i18n="screen2-caption">Kod <span>real vaqtda</span> ishlanmoqda...</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- SLAYDLAR / GALEREYA -->
+
+<section class="gallery">
+
+  <div class="secret-dot" data-secret="s-gallery" style="top:6%;left:2.5%"></div>
+
+  <div class="section-label" data-i18n="label-gallery">04.5 / TASVIRLAR GALEREYASI</div>
+
+  <div class="gradient-title reveal" data-i18n="gallery-title">
+    MOOD
+    <br>
+    BOARD.
+  </div>
+
+  <div class="slider">
+
+    <div class="slide slide1">
+      <div class="slide-visual">
+        <div class="shape"></div>
+        <div class="shape two"></div>
+      </div>
+      <div class="slide-body">
+        <div class="slide-tag" data-i18n="s1-tag">KONSEPT / AI</div>
+        <h4 data-i18n="s1-title">Xarakter dizayni</h4>
+        <p data-i18n="s1-text">Rang va shakl orqali qahramon kayfiyatini yaratish.</p>
+      </div>
+    </div>
+
+    <div class="slide slide2">
+      <div class="slide-visual">
+        <div class="shape"></div>
+        <div class="shape two"></div>
+      </div>
+      <div class="slide-body">
+        <div class="slide-tag" data-i18n="s2-tag">UI / INTERFEYS</div>
+        <h4 data-i18n="s2-title">Interaktiv panel</h4>
+        <p data-i18n="s2-text">Ma'lumotlarni tirik va harakatlanuvchi qilib ko'rsatish.</p>
+      </div>
+    </div>
+
+    <div class="slide slide3">
+      <div class="slide-visual">
+        <div class="shape"></div>
+        <div class="shape two"></div>
+      </div>
+      <div class="slide-body">
+        <div class="slide-tag" data-i18n="s3-tag">ANIMATSIYA</div>
+        <h4 data-i18n="s3-title">Harakat tajribasi</h4>
+        <p data-i18n="s3-text">Sahifani tirik his qildiradigan mayin animatsiyalar.</p>
+      </div>
+    </div>
+
+    <div class="slide slide4">
+      <div class="slide-visual">
+        <div class="shape"></div>
+        <div class="shape two"></div>
+      </div>
+      <div class="slide-body">
+        <div class="slide-tag" data-i18n="s4-tag">TARMOQ / DATA</div>
+        <h4 data-i18n="s4-title">G'oyalar tarmog'i</h4>
+        <p data-i18n="s4-text">Bog'langan fikrlarni vizual tarzda ifodalash.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slider-hint" data-i18n="slider-hint">← SUR ISH →</div>
+
+</section>
+
+
+<!-- foiz -->
+
+<section class="process">
+
+  <div class="secret-dot" data-secret="s-process" style="top:5%;right:6%"></div>
+  <div class="secret-dot" data-secret="s-process2" style="bottom:10%;left:5%"></div>
+
+  <div class="section-label" data-i18n="label-05">05 / MEN QANDAY QURAMAN</div>
+
+  <div class="gradient-title reveal" data-i18n="process-title">
+    MEN SHUNCHAKI
+    <br>
+    KOD YOZMAYMAN.
+  </div>
+
+  <div class="process-list">
+
+    <div class="process-item reveal">
+      <div class="process-main" data-i18n="proc1-main">01 — TASAVVUR QILAMAN</div>
+      <div class="process-num" data-i18n="proc1-num">G'OYA</div>
+    </div>
+
+    <div class="process-item reveal">
+      <div class="process-main" data-i18n="proc2-main">02 — O'RGANAMAN</div>
+      <div class="process-num" data-i18n="proc2-num">TADQIQOT</div>
+    </div>
+
+    <div class="process-item reveal">
+      <div class="process-main" data-i18n="proc3-main">03 — DIZAYN QILAMAN</div>
+      <div class="process-num" data-i18n="proc3-num">YARATISH</div>
+    </div>
+
+    <div class="process-item reveal">
+      <div class="process-main" data-i18n="proc4-main">04 — QURAMAN</div>
+      <div class="process-num" data-i18n="proc4-num">KOD</div>
+    </div>
+
+    <div class="process-item reveal">
+      <div class="process-main" data-i18n="proc5-main">05 — BUZAMAN</div>
+      <div class="process-num" data-i18n="proc5-num">XATO</div>
+    </div>
+
+    <div class="process-item reveal">
+      <div class="process-main" data-i18n="proc6-main">06 — TUZATAMAN</div>
+      <div class="process-num" data-i18n="proc6-num">DEBUG</div>
+    </div>
+
+    <div class="process-item reveal">
+      <div class="process-main" data-i18n="proc7-main">07 — CHIQARAMAN</div>
+      <div class="process-num" data-i18n="proc7-num">YARATISH</div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- kelajak -->
+
+<section class="future">
+
+  <div class="secret-dot" data-secret="s-future" style="top:22%;left:9%"></div>
+  
+  <div>
+
+    <div class="future-small" data-i18n="label-06">06 / BU ENDI BOSHLANISH XOLOS</div>
+
+    <div class="future-year" id="futureYear">
+      2026
+    </div>
+
+    <div class="future-text" data-i18n="future-text">
+      Men dasturchiga o'xshab ko'rinishga urinmayapman.
+      <br>
+      Men dasturchi bo'lib boryapman.
+      <br><br>
+      Va bu portfolio hali faqat 01-versiya.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- oxiri -->
+
+<section class="final">
+
+  <div class="secret-dot" data-secret="s-final" style="top:14%;right:11%"></div>
+
+  <div>
+
+    <div class="section-label" data-i18n="label-07">
+      07 / KO'RGANINGIZ UCHUN RAHMAT
+    </div>
+
+    <h2 class="reveal" data-i18n="final-title">
+      KELING
+      <br>
+      QURAMIZ.
+    </h2>
+
+    <p data-i18n="final-sub">
+      Asalxon tomonidan yaratildi · 13 yosh
+    </p>
+
+    <button class="magic magnetic" id="magic" data-i18n="magic-default">
+      ✦ BUNI BOSMANG
+    </button>
+
+  </div>
+
+</section>
+
+
+<script>
+
+/* LOADER */
+
+window.addEventListener("load",()=>{
+
+  const loader=document.querySelector(".loader");
+  const text=document.getElementById("loadText");
+
+  const messages=[
+    "LOADING IDEAS...",
+    "LOADING CREATIVITY...",
+    "LOADING CODE...",
+    "READY."
+  ];
+
+  messages.forEach((msg,i)=>{
+    setTimeout(()=>{
+      text.textContent=msg;
+    },i*500);
+  });
+
+  setTimeout(()=>{
+    loader.classList.add("hide");
+  },2600);
+
+});
+
+
+/* CURSOR */
+
+const cursor = document.querySelector(".cursor");
+const dot = document.querySelector(".cursor-dot");
+
+let mouseX = 0;
+let mouseY = 0;
+
+let ringX = 0;
+let ringY = 0;
+
+document.addEventListener("mousemove", (e) => {
+
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+    dot.style.left = mouseX + "px";
+    dot.style.top = mouseY + "px";
+
+});
+
+
+function animateCursor(){
+
+    ringX += (mouseX - ringX) * 0.45;
+    ringY += (mouseY - ringY) * 0.45;
+
+    cursor.style.left = ringX + "px";
+    cursor.style.top = ringY + "px";
+
+    requestAnimationFrame(animateCursor);
+}
+
+animateCursor();
+
+
+document.querySelectorAll(
+    "a, button, .skill-tag, .project-card, .slide, .secret-dot"
+).forEach(element => {
+
+    element.addEventListener("mouseenter", () => {
+        cursor.classList.add("active");
+    });
+
+    element.addEventListener("mouseleave", () => {
+        cursor.classList.remove("active");
+    });
+
+});
+
+
+document.querySelectorAll(".magnetic").forEach(el=>{
+
+  el.addEventListener("mousemove",e=>{
+
+    const r=el.getBoundingClientRect();
+
+    const x=e.clientX-r.left-r.width/2;
+    const y=e.clientY-r.top-r.height/2;
+
+    el.style.transform=
+      `translate(${x*.18}px,${y*.18}px)`;
+
+  });
+
+  el.addEventListener("mouseleave",()=>{
+    el.style.transform="";
+  });
+
+});
+
+
+const heroTitle=document.getElementById("heroTitle");
+
+document.addEventListener("mousemove",e=>{
+
+  const x=(e.clientX-innerWidth/2)/45;
+  const y=(e.clientY-innerHeight/2)/45;
+
+  heroTitle.style.transform=
+    `translate(${x}px,${y}px)`;
+
+});
+
+
+const revealObserver=new IntersectionObserver(
+  entries=>{
+
+    entries.forEach(entry=>{
+
+      if(entry.isIntersecting){
+        entry.target.classList.add("show");
+      }
+
+    });
+
+  },
+  {threshold:.12}
+);
+
+document.querySelectorAll(".reveal").forEach(el=>{
+  revealObserver.observe(el);
+});
+
+
+const futureYear=document.getElementById("futureYear");
+
+window.addEventListener("scroll",()=>{
+
+  const max=document.body.scrollHeight-innerHeight;
+
+  const progress=scrollY/max;
+
+  const years=[
+    "2026",
+    "2027",
+    "2028",
+    "2029",
+    "2030",
+    "20??"
+  ];
+
+  const index=Math.min(
+    Math.floor(progress*years.length),
+    years.length-1
+  );
+
+  futureYear.textContent=years[index];
+
+});
+
+
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+
+let particles=[];
+
+function resizeCanvas(){
+
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+
+}
+
+resizeCanvas();
+
+window.addEventListener("resize",resizeCanvas);
+
+for(let i=0;i<100;i++){
+
+  particles.push({
+    x:Math.random()*innerWidth,
+    y:Math.random()*innerHeight,
+    size:Math.random()*2+0.5,
+    speed:Math.random()*.35+.05,
+    alpha:Math.random()*.5+.1
+  });
+
+}
+
+/* constellation connector nodes drift slowly across the whole page */
+let nodes=[];
+const NODE_COUNT = window.innerWidth < 850 ? 28 : 55;
+
+for(let i=0;i<NODE_COUNT;i++){
+  nodes.push({
+    x:Math.random()*innerWidth,
+    y:Math.random()*innerHeight,
+    vx:(Math.random()-.5)*.25,
+    vy:(Math.random()-.5)*.25
+  });
+}
+
+const linkColors=["109,127,255","184,166,255","127,196,255"];
+
+function drawParticles(){
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  /* drifting nodes + connecting lines = constellation effect */
+  nodes.forEach(n=>{
+    n.x+=n.vx;
+    n.y+=n.vy;
+
+    if(n.x<0||n.x>canvas.width) n.vx*=-1;
+    if(n.y<0||n.y>canvas.height) n.vy*=-1;
+  });
+
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+
+      const dx=nodes[i].x-nodes[j].x;
+      const dy=nodes[i].y-nodes[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+
+      if(dist<150){
+        const opacity=(1-dist/150)*.16;
+        const color=linkColors[(i+j)%linkColors.length];
+        ctx.strokeStyle=`rgba(${color},${opacity})`;
+        ctx.lineWidth=1;
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x,nodes[i].y);
+        ctx.lineTo(nodes[j].x,nodes[j].y);
+        ctx.stroke();
+      }
+
+    }
+  }
+
+  nodes.forEach(n=>{
+    ctx.beginPath();
+    ctx.arc(n.x,n.y,1.6,0,Math.PI*2);
+    ctx.fillStyle="rgba(200,180,255,.5)";
+    ctx.fill();
+  });
+
+  /* upward-floating dust particles */
+  particles.forEach(p=>{
+
+    p.y-=p.speed;
+
+    if(p.y<0){
+      p.y=canvas.height;
+      p.x=Math.random()*canvas.width;
+    }
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+
+    ctx.fillStyle=
+      `rgba(180,150,255,${p.alpha})`;
+
+    ctx.fill();
+
+  });
+
+  requestAnimationFrame(drawParticles);
+
+}
+
+drawParticles();
+
+
+/* PROJECT SCREEN "VIDEO" LOOPS */
+
+function setupScreenCanvas(id){
+  const c = document.getElementById(id);
+  if(!c) return null;
+  const parent = c.parentElement;
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+
+  function resize(){
+    const w = parent.clientWidth;
+    const h = parent.clientHeight;
+    c.width = w*dpr;
+    c.height = h*dpr;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  const cx = c.getContext("2d");
+  cx.setTransform(dpr,0,0,dpr,0,0);
+  return {canvas:c, ctx:cx, get w(){return c.width/dpr}, get h(){return c.height/dpr}};
+}
+
+/* Screen 1: morphing "AI character" blob loop */
+const screen1 = setupScreenCanvas("screen1");
+
+function drawScreen1(t){
+  if(!screen1) return;
+  const {ctx,w,h} = screen1;
+
+  ctx.clearRect(0,0,w,h);
+
+  const cxp = w/2, cyp = h/2;
+  const baseR = Math.min(w,h)*.22;
+
+  // soft glow backdrop
+  const glow = ctx.createRadialGradient(cxp,cyp,0,cxp,cyp,Math.min(w,h)*.5);
+  glow.addColorStop(0,"rgba(109,127,255,.18)");
+  glow.addColorStop(1,"rgba(109,127,255,0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0,0,w,h);
+
+  // orbit ring
+  ctx.beginPath();
+  ctx.strokeStyle = "rgba(255,255,255,.12)";
+  ctx.lineWidth = 1;
+  ctx.arc(cxp,cyp,Math.min(w,h)*.32,0,Math.PI*2);
+  ctx.stroke();
+
+  const dotAngle = t*0.0006;
+  ctx.beginPath();
+  ctx.fillStyle = "#7fc4ff";
+  ctx.shadowColor = "#7fc4ff";
+  ctx.shadowBlur = 14;
+  ctx.arc(
+    cxp + Math.cos(dotAngle)*Math.min(w,h)*.32,
+    cyp + Math.sin(dotAngle)*Math.min(w,h)*.32,
+    3.5,0,Math.PI*2
+  );
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // morphing blob (metaball-ish via noisy radius)
+  ctx.save();
+  ctx.translate(cxp,cyp);
+
+  const grad = ctx.createLinearGradient(-baseR,-baseR,baseR,baseR);
+  grad.addColorStop(0,"#6d7fff");
+  grad.addColorStop(.5,"#b8a6ff");
+  grad.addColorStop(1,"#7fc4ff");
+
+  ctx.beginPath();
+  const points = 10;
+  for(let i=0;i<=points;i++){
+    const ang = (i/points)*Math.PI*2;
+    const wobble = Math.sin(ang*3 + t*0.0012)*.14 + Math.sin(ang*2 - t*0.0009)*.08;
+    const r = baseR*(1+wobble);
+    const x = Math.cos(ang)*r;
+    const y = Math.sin(ang)*r;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.shadowColor = "#6d7fff";
+  ctx.shadowBlur = 40;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  ctx.restore();
+
+  // small drifting "character" satellites
+  for(let i=0;i<3;i++){
+    const ang = t*0.0004 + i*(Math.PI*2/3);
+    const r = baseR*1.8;
+    const x = cxp + Math.cos(ang)*r;
+    const y = cyp + Math.sin(ang)*r*0.6;
+    ctx.beginPath();
+    ctx.arc(x,y,4+i,0,Math.PI*2);
+    ctx.fillStyle = i%2? "rgba(184,166,255,.7)" : "rgba(127,196,255,.7)";
+    ctx.fill();
+  }
+}
+
+/* Screen 2: animated "code / data lab" loop */
+const screen2 = setupScreenCanvas("screen2");
+const barCount = 24;
+const bars = Array.from({length:barCount},()=>Math.random());
+const codeLines = [10,60,35,80,45,20,70,30];
+
+function drawScreen2(t){
+  if(!screen2) return;
+  const {ctx,w,h} = screen2;
+
+  ctx.clearRect(0,0,w,h);
+
+  // faint code lines top area
+  ctx.font = "9px monospace";
+  for(let i=0;i<codeLines.length;i++){
+    const y = 18 + i*13;
+    if(y > h*0.42) break;
+    const width = codeLines[i] * (w/140);
+    const flicker = (Math.sin(t*0.002 + i)+1)/2;
+    ctx.fillStyle = `rgba(184,166,255,${0.12+flicker*0.1})`;
+    ctx.fillRect(14, y, width, 4);
+  }
+
+  // scanning line
+  const scanY = (h*0.42) + (((t*0.05) % (h*0.4)));
+  const scanGrad = ctx.createLinearGradient(0,scanY-1,0,scanY+1);
+  scanGrad.addColorStop(0,"rgba(127,196,255,0)");
+  scanGrad.addColorStop(.5,"rgba(127,196,255,.55)");
+  scanGrad.addColorStop(1,"rgba(127,196,255,0)");
+  ctx.fillStyle = scanGrad;
+  ctx.fillRect(0, scanY-1, w, 2);
+
+  // animated equalizer bars (bottom half = "data lab" experiment output)
+  const areaTop = h*0.55;
+  const areaH = h*0.35;
+  const gap = 4;
+  const bw = (w - 28 - gap*(barCount-1)) / barCount;
+
+  for(let i=0;i<barCount;i++){
+    const phase = t*0.0025 + i*0.4;
+    bars[i] += (Math.sin(phase)*0.5+0.5 - bars[i])*0.06;
+    const bh = Math.max(4, bars[i]*areaH);
+    const x = 14 + i*(bw+gap);
+    const y = areaTop + areaH - bh;
+
+    const bgrad = ctx.createLinearGradient(0,y,0,areaTop+areaH);
+    bgrad.addColorStop(0,"#7fc4ff");
+    bgrad.addColorStop(1,"#6d7fff");
+    ctx.fillStyle = bgrad;
+    ctx.fillRect(x,y,bw,bh);
+  }
+}
+
+function animateScreens(t){
+  drawScreen1(t);
+  drawScreen2(t);
+  requestAnimationFrame(animateScreens);
+}
+requestAnimationFrame(animateScreens);
+
+
+/* CLICK SURPRISE */
+
+const magic=document.getElementById("magic");
+let magicLang = "uz";
+
+magic.addEventListener("click",()=>{
+
+  document.body.animate(
+    [
+      {transform:"translate(0)"},
+      {transform:"translate(7px,-3px)"},
+      {transform:"translate(-7px,3px)"},
+      {transform:"translate(3px,0)"},
+      {transform:"translate(0)"}
+    ],
+    {duration:450}
+  );
+
+  magic.textContent = magicLang === "uz"
+    ? "BOSISHINGNI BILARDIM 😈"
+    : "I KNEW YOU'D CLICK IT 😈";
+
+  setTimeout(()=>{
+    magic.textContent = magicLang === "uz"
+      ? "✦ BUNI BOSMANG"
+      : "✦ DON'T CLICK THIS";
+  },2500);
+
+});
+
+
+setInterval(()=>{
+
+  if(Math.random()>.65){
+
+    heroTitle.animate(
+      [
+        {transform:"translate(0)"},
+        {transform:"translate(4px,-2px)"},
+        {transform:"translate(-4px,2px)"},
+        {transform:"translate(0)"}
+      ],
+      {duration:220}
+    );
+
+  }
+
+},5000);
+
+
+/* TIL ALMASHTIRISH / LANGUAGE TOGGLE */
+
+const translations = {
+  "nav-role":{uz:"13 / DASTURCHI",en:"13 / DEVELOPER"},
+  "kicker":{uz:"✦ MENING RAQAMLI DUNYOMGA XUSH KELIBSIZ",en:"✦ WELCOME TO MY DIGITAL WORLD"},
+  "hero-desc":{
+    uz:`<strong>13 yoshda.</strong> Kodlashni o'rganaman, g'oyalar yarataman va xayolimni raqamli tajribaga aylantiraman.`,
+    en:`<strong>13 years old.</strong> Learning to code, creating ideas, and turning imagination into digital experiences.`
+  },
+  "btn-explore":{uz:"MENI KASHF ET ↘",en:"EXPLORE MY WORLD ↘"},
+  "btn-work":{uz:"ISHLARIMNI KO'R",en:"SEE MY WORK"},
+  "scroll-hint":{uz:"SKROLL QIL",en:"SCROLL TO ENTER"},
+  "label-01":{uz:"01 / SHU YERDAN BOSHLANG",en:"01 / START HERE"},
+  "about-title":{uz:"XO'SH...<br>ASALXON<br>KIM?",en:"SO...<br>WHO IS<br>ASALXON?"},
+  "about-text":{
+    uz:`Texnologiyani shunchaki <span>ishlatib qo'ymaydigan,</span><br><br>uni <strong>yaratmoqchi</strong> bo'lgan qiziqchan qiz.`,
+    en:`A curious girl who doesn't want to <span>just use technology.</span><br><br>She wants to <strong>create it.</strong>`
+  },
+  "age-badge":{uz:"HOZIRGI YOSHIM → 13 YOSH",en:"CURRENT AGE → 13 YEARS"},
+  "label-02":{uz:"02 / ODAMLAR KUTMAYDIGAN QISM",en:"02 / THE PART PEOPLE DON'T EXPECT"},
+  "age-text":{
+    uz:`<span>"Nima..."</span><br>Men bor-yo'g'i 13 yoshdaman.<br><span>Gap aynan shunda.</span>`,
+    en:`<span>"Wait..."</span><br>I'm only 13.<br><span>That's exactly the point.</span>`
+  },
+  "label-03":{uz:"03 / MENING RAQAMLI ASBOBLARIM",en:"03 / MY DIGITAL TOOLBOX"},
+  "skills-title":{uz:"KOD —<br>MENING<br>MATERIALIM.",en:"CODE IS<br>MY<br>MATERIAL."},
+  "skills-text":{
+    uz:"Men dasturlash, interfeyslar, sun'iy intellekt va ijodiy texnologiyalar bilan tajriba qilaman. Har bir yangi til g'oyani qurishning yana bir yo'lini beradi.",
+    en:"I experiment with programming, interfaces, artificial intelligence and creative technology. Every new language gives me another way to build an idea."
+  },
+  "label-04":{uz:"04 / MEN NIMA YARATAMAN",en:"04 / WHAT I CREATE"},
+  "projects-title":{uz:"G'OYALAR<br>HAQIQATGA<br>AYLANADI.",en:"IDEAS<br>BECOME<br>REAL."},
+  "p1-number":{uz:"LOYIHA 01 / IJODIY AI",en:"PROJECT 01 / CREATIVE AI"},
+  "p1-title":{uz:"AI<br>MULTFILM<br>STUDIYASI",en:"AI<br>CARTOON<br>STUDIO"},
+  "p1-text":{
+    uz:"Hikoyalarni AI yordamida qahramonlarga, rasmlarga, animatsiyaga va ovozga aylantirish g'oyasi.",
+    en:"An experimental idea for turning stories into characters, images, animation and sound with the help of AI."
+  },
+  "p1-link":{uz:"G'OYANI KO'R ↗",en:"EXPLORE CONCEPT ↗"},
+  "p2-number":{uz:"LOYIHA 02 / EKSPERIMENT",en:"PROJECT 02 / EXPERIMENT"},
+  "p2-title":{uz:"RAQAMLI<br>LABORATORIYA",en:"DIGITAL<br>LAB"},
+  "p2-text":{
+    uz:"Saytlar, animatsiyalar, AI va yangi texnologiyalar bilan tajriba qilish uchun shaxsiy maydonim.",
+    en:"A personal playground for experimenting with websites, animations, AI and new technologies."
+  },
+  "p2-link":{uz:"TAJRIBALARNI KO'R ↗",en:"VIEW EXPERIMENTS ↗"},
+  "screen1-caption":{
+    uz:`Loyiha <span>oldindan ko'rish</span> jarayoni...`,
+    en:`Project <span>preview</span> loop...`
+  },
+  "screen2-caption":{
+    uz:`Kod <span>real vaqtda</span> ishlanmoqda...`,
+    en:`Code <span>running live</span>...`
+  },
+  "label-gallery":{uz:"04.5 / TASVIRLAR GALEREYASI",en:"04.5 / VISUAL GALLERY"},
+  "gallery-title":{uz:"MOOD<br>BOARD.",en:"MOOD<br>BOARD."},
+  "s1-tag":{uz:"KONSEPT / AI",en:"CONCEPT / AI"},
+  "s1-title":{uz:"Xarakter dizayni",en:"Character design"},
+  "s1-text":{uz:"Rang va shakl orqali qahramon kayfiyatini yaratish.",en:"Building character mood through color and shape."},
+  "s2-tag":{uz:"UI / INTERFEYS",en:"UI / INTERFACE"},
+  "s2-title":{uz:"Interaktiv panel",en:"Interactive panel"},
+  "s2-text":{uz:"Ma'lumotlarni tirik va harakatlanuvchi qilib ko'rsatish.",en:"Making data feel alive and in motion."},
+  "s3-tag":{uz:"ANIMATSIYA",en:"ANIMATION"},
+  "s3-title":{uz:"Harakat tajribasi",en:"Motion experiment"},
+  "s3-text":{uz:"Sahifani tirik his qildiradigan mayin animatsiyalar.",en:"Soft animations that make a page feel alive."},
+  "s4-tag":{uz:"TARMOQ / DATA",en:"NETWORK / DATA"},
+  "s4-title":{uz:"G'oyalar tarmog'i",en:"Idea network"},
+  "s4-text":{uz:"Bog'langan fikrlarni vizual tarzda ifodalash.",en:"Visualizing connected thoughts."},
+  "slider-hint":{uz:"← SURING →",en:"← SWIPE TO EXPLORE →"},
+  "label-05":{uz:"05 / MEN QANDAY QURAMAN",en:"05 / HOW I BUILD"},
+  "process-title":{uz:"MEN SHUNCHAKI<br>KOD YOZMAYMAN.",en:"I DON'T<br>JUST CODE."},
+  "proc1-main":{uz:"01 — TASAVVUR QILAMAN",en:"01 — IMAGINE"},
+  "proc1-num":{uz:"G'OYA",en:"IDEA"},
+  "proc2-main":{uz:"02 — O'RGANAMAN",en:"02 — EXPLORE"},
+  "proc2-num":{uz:"TADQIQOT",en:"RESEARCH"},
+  "proc3-main":{uz:"03 — DIZAYN QILAMAN",en:"03 — DESIGN"},
+  "proc3-num":{uz:"YARATISH",en:"CREATE"},
+  "proc4-main":{uz:"04 — QURAMAN",en:"04 — BUILD"},
+  "proc4-num":{uz:"KOD",en:"CODE"},
+  "proc5-main":{uz:"05 — BUZAMAN",en:"05 — BREAK"},
+  "proc5-num":{uz:"XATO",en:"FAIL"},
+  "proc6-main":{uz:"06 — TUZATAMAN",en:"06 — FIX"},
+  "proc6-num":{uz:"DEBUG",en:"DEBUG"},
+  "proc7-main":{uz:"07 — CHIQARAMAN",en:"07 — SHIP"},
+  "proc7-num":{uz:"YARATISH",en:"CREATE"},
+  "label-06":{uz:"06 / BU ENDI BOSHLANISH XOLOS",en:"06 / THIS IS ONLY THE BEGINNING"},
+  "future-text":{
+    uz:"Men dasturchiga o'xshab ko'rinishga urinmayapman.<br>Men dasturchi bo'lib boryapman.<br><br>Va bu portfolio hali faqat 01-versiya.",
+    en:"I'm not trying to look like a developer.<br>I'm becoming one.<br><br>And this portfolio is only version 01."
+  },
+  "label-07":{uz:"07 / KO'RGANINGIZ UCHUN RAHMAT",en:"07 / THANKS FOR EXPLORING"},
+  "final-title":{uz:"KELING<br>QURAMIZ.",en:"LET'S<br>BUILD."},
+  "final-sub":{uz:"Asalxon tomonidan yaratildi · 13 yosh",en:"Designed & built by Asalxon · 13"},
+  "magic-default":{uz:"✦ BUNI BOSMANG",en:"✦ DON'T CLICK THIS"}
+};
+
+function setLanguage(lang){
+
+  magicLang = lang;
+
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key = el.getAttribute("data-i18n");
+    const entry = translations[key];
+    if(entry){
+      el.innerHTML = entry[lang];
+    }
+  });
+
+  document.querySelectorAll(".lang-btn").forEach(btn=>{
+    btn.classList.toggle("active", btn.dataset.lang === lang);
+  });
+
+  document.documentElement.lang = lang;
+
+}
+
+document.querySelectorAll(".lang-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    setLanguage(btn.dataset.lang);
+  });
+});
+
+setLanguage("uz");
+
+
+/* SIRLI DOIRACHALAR / SECRET DOTS */
+
+const secrets = {
+  "s-about":{
+    tag:{uz:"SIR #1",en:"SECRET #1"},
+    uz:"Birinchi HTML sahifamni yozganimda, uni qanday saqlashni bilmay, 20 daqiqa Google'da qidirganman 😅",
+    en:"When I wrote my first HTML page, I spent 20 minutes googling how to even save it 😅"
+  },
+  "s-age":{
+    tag:{uz:"SIR #2",en:"SECRET #2"},
+    uz:"Hech kimga aytmagandim: kodni tushunmay qolganimda, uni ovoz chiqarib o'zimga tushuntiraman.⭐",
+    en:"Never told anyone: when I get stuck, I explain the code out loud to myself."
+  },
+  "s-skills":{
+    tag:{uz:"SIR #3",en:"SECRET #3"},
+    uz:"Bu saytdagi ko'k rang tasodifiy emas — bu mening eng sevimli kombinatsiyam.💙",
+    en:"The blue color on this site isn't random — it's my favorite combo."
+  },
+  "s-projects":{
+    tag:{uz:"SIR #4",en:"SECRET #4"},
+    uz:"AI Cartoon Studio g'oyasi tushimda kelgan — uyg'onib darrov yozib qo'yganman.🖊️",
+    en:"The AI Cartoon Studio idea came to me in a dream — I wrote it down the moment I woke up."
+  },
+  "s-gallery":{
+    tag:{uz:"SIR #5",en:"SECRET #5"},
+    uz:"Bu 4 ta karta dizaynini 4 marta butunlay qayta qurganman, chunki birinchisi juda zerikarli edi.🎨",
+    en:"I rebuilt these 4 cards from scratch 4 times because the first version was too boring."
+  },
+  "s-process":{
+    tag:{uz:"SIR #6",en:"SECRET #6"},
+    uz:"'05 — BUZAMAN' bosqichi eng ko'p vaqt oladi. Har doim.⛓️‍💥",
+    en:"'05 — BREAK' is always the step that takes the longest. Every time."
+  },
+  "s-process2":{
+    tag:{uz:"SIR #7",en:"SECRET #7"},
+    uz:"Debug qilayotganimda ba'zan konsolga 'iltimos ishla' deb yozib qo'yaman.☺️",
+    en:"Sometimes while debugging I literally type 'please work' into the console."
+  },
+  "s-future":{
+    tag:{uz:"SIR #8",en:"SECRET #8"},
+    uz:"Maqsadim: 18 yoshimga qadar o'zimning kichik ilovamni chiqarish.🤩",
+    en:"My goal: ship my own small app before I turn 18."
+  },
+  "s-final":{
+    tag:{uz:"SIR #9",en:"SECRET #9"},
+    uz:"Rahmat bu yerlarni kashf qilganingiz uchun — siz sirlarimni topgan birinchilardansiz.😏",
+    en:"Thanks for digging around — you're one of the first to find my secrets."
+  }
+};
+
+const secretOverlay = document.getElementById("secretOverlay");
+const secretPopup = document.getElementById("secretPopup");
+const secretTag = document.getElementById("secretTag");
+const secretText = document.getElementById("secretText");
+const secretClose = document.getElementById("secretClose");
+let currentLang = "uz";
+
+function openSecret(key, dotEl){
+
+  const entry = secrets[key];
+  if(!entry) return;
+
+  secretTag.textContent = entry.tag[currentLang];
+  secretText.textContent = entry[currentLang];
+
+  const r = dotEl.getBoundingClientRect();
+  const popupWidth = Math.min(300, innerWidth*.8);
+  let left = r.left + r.width/2 - popupWidth/2;
+  left = Math.max(16, Math.min(left, innerWidth - popupWidth - 16));
+
+  let top = r.top + r.height + 14;
+  if(top + 160 > innerHeight){
+    top = Math.max(16, r.top - 170);
+  }
+
+  secretPopup.style.left = left + "px";
+  secretPopup.style.top = top + "px";
+
+  secretOverlay.classList.add("show");
+  secretPopup.classList.add("show");
+
+}
+
+function closeSecret(){
+  secretOverlay.classList.remove("show");
+  secretPopup.classList.remove("show");
+}
+
+document.querySelectorAll(".secret-dot").forEach(dot=>{
+  dot.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    openSecret(dot.dataset.secret, dot);
+  });
+});
+
+secretOverlay.addEventListener("click", closeSecret);
+secretClose.addEventListener("click", closeSecret);
+
+
+const originalSetLanguage = setLanguage;
+setLanguage = function(lang){
+  originalSetLanguage(lang);
+  currentLang = lang;
+  closeSecret();
+};
+
+</script>
+
+</body>
+</html>
